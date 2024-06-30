@@ -23,6 +23,10 @@ let character = {
 
 const battleRating = character.level * 100;
 
+window.onload = () => {
+    alert('Spam "Attack" to damage your enemies and level up!')
+}
+
 function updateElements () {
     enemyHpElement.innerHTML = `Hp: ${enemyHp}`;
     clicksElement.innerHTML = `Total clicks: ${totalClicks}`;
@@ -35,7 +39,7 @@ function calculateDamage (type) {
         break;
 
         case type === 'ult':
-            return Math.floor(Math.random() * Math.floor(battleRating / 3)) * 4
+            return battleRating * 2
         break;
     
         default:
@@ -43,12 +47,22 @@ function calculateDamage (type) {
     }
 };
 
+function handleActionElements () {
+    if (normalAttackElement.classList.contains('active')) {
+        normalAttackElement.classList.replace('active', 'inactive');
+        ultAttackElement.classList.replace('inactive', 'active');
+    } else {
+        normalAttackElement.classList.replace('inactive', 'active');
+        ultAttackElement.classList.replace('active', 'inactive');
+    }
+}
+
 function handleUltClicks () {
     if (ultClicks >= 20) {
         ultReadiness = true;
         ultClicks = 0;
 
-        alert('Your ULT is ready!')
+        handleActionElements();
     } else {
         return;
     };
@@ -68,8 +82,9 @@ function ultAttack (damage) {
         handleEnemyDeath();
         updateElements();
 
-        console.log(`Damaged: ${damage}`);
+        console.log(`Ulted: ${damage}`);
 
+        handleActionElements();
         ultReadiness === false;
     } else {
         alert('ULT is not ready!');
